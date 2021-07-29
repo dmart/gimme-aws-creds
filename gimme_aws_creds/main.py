@@ -549,6 +549,9 @@ class GimmeAWSCreds(object):
         if self.conf_dict.get('preferred_mfa_type'):
             okta.set_preferred_mfa_type(self.conf_dict['preferred_mfa_type'])
 
+        if self.conf_dict.get('preferred_mfa_factor_name'):
+            okta.set_preferred_mfa_factor_name(self.conf_dict['preferred_mfa_factor_name'])
+
         if self.config.mfa_code is not None:
             okta.set_mfa_code(self.config.mfa_code)
         elif self.conf_dict.get('okta_mfa_code'):
@@ -894,6 +897,7 @@ class GimmeAWSCreds(object):
             self.auth_session
 
             self.okta.set_preferred_mfa_type(None)
+            self.okta.set_preferred_mfa_factor_name(None)
             credential_id, user = self.okta.setup_fido_authenticator()
 
             registered_authenticators = RegisteredAuthenticators(self.ui)

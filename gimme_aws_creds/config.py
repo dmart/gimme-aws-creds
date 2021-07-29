@@ -245,6 +245,7 @@ class Config(object):
             'resolve_aws_alias': 'n',
             'include_path': 'n',
             'preferred_mfa_type': '',
+            'preferred_mfa_factor_name': '',
             'remember_device': 'n',
             'aws_default_duration': '3600',
             'device_token': '',
@@ -282,6 +283,7 @@ class Config(object):
         config_dict['okta_username'] = self._get_okta_username(defaults['okta_username'])
         config_dict['aws_default_duration'] = self._get_aws_default_duration(defaults['aws_default_duration'])
         config_dict['preferred_mfa_type'] = self._get_preferred_mfa_type(defaults['preferred_mfa_type'])
+        config_dict['preferred_mfa_factor_name'] = self._get_preferred_mfa_factor_name(defaults['preferred_mfa_factor_name'])
         config_dict['remember_device'] = self._get_remember_device(defaults['remember_device'])
         config_dict["output_format"] = ''
         if not config_dict["write_aws_creds"]:
@@ -506,6 +508,15 @@ class Config(object):
         okta_username = self._get_user_input(
             "Preferred MFA Device Type", default_entry)
         return okta_username
+
+    def _get_preferred_mfa_factor_name(self, default_entry):
+        """Get the user's preferred MFA factor name [Optional]"""
+        ui.default.message(
+            """factor name"""
+        )
+        preferred_mfa_factor_name = self._get_user_input(
+            "Preferred MFA Factor Name", default_entry)
+        return preferred_mfa_factor_name
 
     def _get_output_format(self, default_entry):
         """Get the user's preferred output format [Optional]"""

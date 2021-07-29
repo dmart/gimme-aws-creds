@@ -63,6 +63,7 @@ class OktaClient(object):
         self._username = None
         self._password = None
         self._preferred_mfa_type = None
+        self._preferred_mfa_factor_name = None
         self._mfa_code = None
         self._remember_device = None
 
@@ -101,6 +102,9 @@ class OktaClient(object):
 
     def set_preferred_mfa_type(self, preferred_mfa_type):
         self._preferred_mfa_type = preferred_mfa_type
+
+    def set_preferred_mfa_factor_name(self, preferred_mfa_factor_name):
+        self._preferred_mfa_factor_name = preferred_mfa_factor_name
 
     def set_mfa_code(self, mfa_code):
         self._mfa_code = mfa_code
@@ -782,11 +786,15 @@ class OktaClient(object):
             # prompting to select another.
             if not preferred_factors:
                 self.ui.notify('Preferred factor type of {} not available.'.format(self._preferred_mfa_type))
-
         if len(preferred_factors) == 1:
             factor_name = self._build_factor_name(preferred_factors[0])
             self.ui.info(factor_name + ' selected')
             selection = factors.index(preferred_factors[0])
+        elif len(preferred_factors) > 1 and self._preferred_mfa_factor_name is not None:
+           factor = list(filter(lambda item: item['profile'].get('authenticatorName') == self._preferred_mfa_factor_name, preferred_factors))[0] 
+           factor_name = self._build_factor_name(factor)
+           self.ui.info(factor_name + ' selected')
+           selection = factors.index(factor)
         else:
             self.ui.info("Pick a factor:")
             # print out the factors and let the user select
